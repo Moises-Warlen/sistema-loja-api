@@ -27,7 +27,7 @@ model Cliente {
 
 model Produto {
   id          Int      @id @default(autoincrement())
-  referencia  String   @unique // Ex: M-100, M-101 (gerado automaticamente)
+  referencia  String   @unique
   nome        String
   precoCompra Float    @map("preco_compra")
   precoVenda  Float    @map("preco_venda")
@@ -40,10 +40,10 @@ model Produto {
 
 model Venda {
   id             Int        @id @default(autoincrement())
-  dataVenda      DateTime   @default(now()) @map("data_venda") // data escolhida pelo usuário
-  total          Float      // calculado automaticamente
-  formaPagamento String     @map("forma_pagamento") // dinheiro, pix, credito, debito
-  createdAt      DateTime   @default(now()) @map("created_at") // data de registro
+  dataVenda      DateTime   @default(now()) @map("data_venda")
+  total          Float
+  formaPagamento String     @map("forma_pagamento")
+  createdAt      DateTime   @default(now()) @map("created_at")
 
   clienteId Int     @map("cliente_id")
   cliente   Cliente @relation(fields: [clienteId], references: [id])
@@ -56,7 +56,7 @@ model Venda {
 model ItemVenda {
   id         Int   @id @default(autoincrement())
   quantidade Int
-  subtotal   Float // precoVenda * quantidade no momento da venda
+  subtotal   Float
 
   vendaId   Int    @map("venda_id")
   venda     Venda  @relation(fields: [vendaId], references: [id])
