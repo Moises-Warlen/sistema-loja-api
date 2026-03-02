@@ -1,13 +1,13 @@
 {
   "name": "sistema-loja-backend",
   "version": "1.0.0",
-  "main": "server.js",  // ← SEM src/
+  "main": "server.js", 
   "scripts": {
-    "start": "node server.js",  // ← SEM src/
+    "start": "node server.js", 
     "dev": "nodemon server.js",
     "build": "prisma generate",
     "migrate": "prisma migrate deploy",
-    "seed": "node seed.js",  // ← SEM src/
+    "seed": "node seed.js", 
     "postinstall": "prisma generate"
   },
   "dependencies": {
