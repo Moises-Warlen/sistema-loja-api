@@ -1,13 +1,14 @@
 {
   "name": "sistema-loja-backend",
   "version": "1.0.0",
-  "description": "Backend do sistema de gestão Mariá Skincare",
-  "main": "index.js",
+  "main": "src/server.js",  // ← Adiciona src/
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
+    "start": "node src/server.js",  // ← Adiciona src/
+    "dev": "nodemon src/server.js",
+    "build": "prisma generate",
     "migrate": "prisma migrate deploy",
-    "generate": "prisma generate"
+    "seed": "node src/seed.js",  // ← Adiciona src/
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^5.0.0",
