@@ -11,38 +11,59 @@ model Usuario {
   id      Int    @id @default(autoincrement())
   usuario String @unique
   senha   String
-}
 
-model Produto {
-  id            Int      @id @default(autoincrement())
-  referencia    String
-  nome          String
-  precoCompra   Float
-  lucro         Float
-  precoVenda    Float
-  estoque       Int
-  estoqueMinimo Int
-  criadoEm      DateTime @default(now())
-  vendas        Venda[]
+  @@map("usuarios")
 }
 
 model Cliente {
-  id       Int      @id @default(autoincrement())
-  nome     String
-  telefone String
-  vendas   Venda[]
+  id        Int      @id @default(autoincrement())
+  nome      String
+  telefone  String
+  createdAt DateTime @default(now()) @map("created_at")
+  vendas    Venda[]
+
+  @@map("clientes")
+}
+
+model Produto {
+  id          Int      @id @default(autoincrement())
+  referencia  String   @unique // Ex: M-100, M-101 (gerado automaticamente)
+  nome        String
+  precoCompra Float    @map("preco_compra")
+  precoVenda  Float    @map("preco_venda")
+  estoque     Int      @default(0)
+  createdAt   DateTime @default(now()) @map("created_at")
+  itensVenda  ItemVenda[]
+
+  @@map("produtos")
 }
 
 model Venda {
-  id         Int      @id @default(autoincrement())
-  data       DateTime @default(now())
+  id             Int        @id @default(autoincrement())
+  dataVenda      DateTime   @default(now()) @map("data_venda") // data escolhida pelo usuário
+  total          Float      // calculado automaticamente
+  formaPagamento String     @map("forma_pagamento") // dinheiro, pix, credito, debito
+  createdAt      DateTime   @default(now()) @map("created_at") // data de registro
+
+  clienteId Int     @map("cliente_id")
+  cliente   Cliente @relation(fields: [clienteId], references: [id])
+
+  itens ItemVenda[]
+
+  @@map("vendas")
+}
+
+model ItemVenda {
+  id         Int   @id @default(autoincrement())
   quantidade Int
-  total      Float
-  pagamento  String
+  subtotal   Float // precoVenda * quantidade no momento da venda
 
-  produtoId  Int
-  produto    Produto @relation(fields: [produtoId], references: [id])
+  vendaId   Int    @map("venda_id")
+  venda     Venda  @relation(fields: [vendaId], references: [id])
 
-  clienteId  Int
-  cliente    Cliente @relation(fields: [clienteId], references: [id])
+  produtoId Int    @map("produto_id")
+  produto   Produto @relation(fields: [produtoId], references: [id])
+
+  @@unique([vendaId, produtoId])
+  @@map("itens_venda")
 }
