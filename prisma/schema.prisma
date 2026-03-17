@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Usuario {
@@ -45,7 +46,7 @@ model Venda {
   formaPagamento String     @map("forma_pagamento")
   createdAt      DateTime   @default(now()) @map("created_at")
 
-  clienteId Int     @map("cliente_id")
+  clienteId Int
   cliente   Cliente @relation(fields: [clienteId], references: [id])
 
   itens ItemVenda[]
@@ -58,10 +59,10 @@ model ItemVenda {
   quantidade Int
   subtotal   Float
 
-  vendaId   Int    @map("venda_id")
+  vendaId   Int
   venda     Venda  @relation(fields: [vendaId], references: [id])
 
-  produtoId Int    @map("produto_id")
+  produtoId Int
   produto   Produto @relation(fields: [produtoId], references: [id])
 
   @@unique([vendaId, produtoId])

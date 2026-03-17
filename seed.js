@@ -4,16 +4,24 @@ const bcrypt = require("bcrypt");
 const prisma = new PrismaClient();
 
 async function main() {
-  const senhaHash = await bcrypt.hash("lau123", 10);
+  const existing = await prisma.usuario.findUnique({ where: { usuario: "laudinea" } });
 
-  await prisma.usuario.create({
-    data: {
-      usuario: "laudinea",
-      senha: senhaHash
-    }
-  });
+  if (!existing) {
+    const senhaHash = await bcrypt.hash("lau123", 10);
 
-  console.log("Usuário criado!");
+    await prisma.usuario.create({
+      data: {
+        usuario: "laudinea",
+        senha: senhaHash
+      }
+    });
+
+    console.log("Usuário criado com sucesso!");
+  } else {
+    console.log("Usuário já existe!");
+  }
 }
 
-main();
+main()
+  .catch(e => console.error(e))
+  .finally(async () => await prisma.$disconnect());
